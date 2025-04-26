@@ -214,7 +214,7 @@ const NotificationPage = () => {
       </table>
     </div>
 
-      {/* Template Modal */}
+{/* templ */}
       {isTemplateModalOpen && (
         <div className="fixed inset-0 bg-gray-800/80 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-4xl">
@@ -274,7 +274,7 @@ const NotificationPage = () => {
         </div>
       )}
 
-      {/* Send Notification Modal */}
+      {/*send noti*/}
       {isSendModalOpen && (
         <div className="fixed inset-0 bg-gray-800/80 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-md">

@@ -33,7 +33,6 @@ const UsersPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Fetch Users
   const fetchUsers = async () => {
     try {
       const response = await axios.get('http://localhost:8084/api/admin/users');
@@ -53,13 +52,13 @@ const UsersPage = () => {
     fetchUsers();
   }, []);
 
-  // Pagination Logic
+  //pagination
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentUsers = users.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(users.length / itemsPerPage);
 
-  // Add User
+  // add User
   const handleAddUser = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -83,7 +82,6 @@ const UsersPage = () => {
     }
   };
 
-  // Update Role
   const handleRoleChange = async (userId: string, newRole: User['role']) => {
     try {
       await axios.put(
@@ -102,7 +100,6 @@ const UsersPage = () => {
     }
   };
 
-  // Verify User
   const handleVerifyUser = async (userId: string, verified: boolean) => {
     try {
       await axios.put(
@@ -121,7 +118,6 @@ const UsersPage = () => {
     }
   };
 
-  // Delete User
   const handleDeleteUser = async (userId: string) => {
     if (!window.confirm('Are you sure you want to delete this user?')) return;
     try {
@@ -231,7 +227,7 @@ const UsersPage = () => {
           </tbody>
         </table>
 
-        {/* Pagination */}
+        {/* pagination code */}
         <div className="flex justify-between items-center p-4 bg-gray-50">
           <button
             onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
@@ -253,7 +249,6 @@ const UsersPage = () => {
         </div>
       </div>
 
-      {/* Add User Modal */}
       {isAddModalOpen && (
         <div className="fixed inset-0 bg-gray-800/80 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-md">

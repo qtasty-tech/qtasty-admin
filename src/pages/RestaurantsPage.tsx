@@ -5,7 +5,6 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
-// Fix leaflet marker icons
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
@@ -264,7 +263,6 @@ const RestaurantsPage = () => {
         </div>
       </div>
 
-      {/* Add Restaurant Modal */}
       {isAddModalOpen && (
         <div className="fixed inset-0 bg-gray-800/80 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-md">
@@ -344,7 +342,7 @@ const RestaurantsPage = () => {
         </div>
       )}
 
-      {/* Map Modal */}
+      {/* map */}
       {mapRestaurant && (
     <div className="fixed inset-0 bg-gray-800/80 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-xl p-6 w-full max-w-3xl">
