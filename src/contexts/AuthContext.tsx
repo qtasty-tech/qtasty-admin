@@ -2,13 +2,12 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 import axios from 'axios';
 import { jwtDecode } from "jwt-decode";
 
-
 type User = {
   id: string;
   email: string;
-  fname: string;
-  lname: string;
-  userType: string;
+  name: string;
+  phone: string;
+  role: string;
 };
 
 type AuthContextType = {
@@ -31,9 +30,8 @@ type LoginResponse = {
 type RegisterFormData = {
   email: string;
   password: string;
-  fname: string;
-  lname: string;
-  userType: string;
+  name: string;
+  phone: string;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -82,9 +80,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const register = async (formData: RegisterFormData) => {
     try {
-      const response = await axios.post('http://localhost:8080/api/user/register', formData);
-      console.log("RESPONSE : ",response.data);
-      
+      await axios.post('http://localhost:8080/api/user/register', formData);
     } catch (error) {
       console.error('Registration failed:', error);
       throw error;
