@@ -26,6 +26,7 @@ const NotificationPage = () => {
     content: ''
   });
   const [editMode, setEditMode] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const editor = useEditor({
     extensions: [StarterKit, Underline],
@@ -55,6 +56,11 @@ const NotificationPage = () => {
       editor.commands.setContent(currentTemplate.content || '');
     }
   }, [currentTemplate.content, editor]);
+
+  const filteredTemplates = templates.filter(template =>
+    template.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    template.subject.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleTemplateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,21 +96,15 @@ const NotificationPage = () => {
       return;
     }
     try {
-      await axios.post('http://localhost:8084/api/notifications/send?templateId=' + selectedTemplate);
+      await axios.post(`http://localhost:8085/api/notifications/send`, null, {
+        params: { templateId: selectedTemplate }
+      });
       toast.success('Notifications sent successfully');
       setIsSendModalOpen(false);
     } catch (error) {
       toast.error('Failed to send notifications');
     }
   };
-
-  if (loading) {
-    return (
-      <div className="p-8 flex justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
-      </div>
-    );
-  }
 
   const MenuBar = () => {
     if (!editor) return null;
@@ -150,71 +150,95 @@ const NotificationPage = () => {
     );
   };
 
+  if (loading) {
+    return (
+      <div className="p-8 flex justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-8">
-    <div className="flex justify-between mb-6 items-center">
-      <h1 className="text-3xl font-bold text-gray-800">Newsletter Management</h1>
-      <div className="flex gap-4">
-        <button
-          onClick={() => {
-            setEditMode(false);
-            setCurrentTemplate({ name: '', subject: '', content: '' });
-            setIsTemplateModalOpen(true);
-          }}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-        >
-          Create Template
-        </button>
-        <button
-          onClick={() => setIsSendModalOpen(true)}
-          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
-        >
-          Notify Users
-        </button>
+      <div className="flex justify-between mb-6 items-center">
+        <h1 className="text-3xl font-bold text-gray-800">Newsletter Management</h1>
+        <div className="flex gap-4">
+          <button
+            onClick={() => {
+              setEditMode(false);
+              setCurrentTemplate({ name: '', subject: '', content: '' });
+              setIsTemplateModalOpen(true);
+            }}
+            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            Create Template
+          </button>
+          <button
+            onClick={() => setIsSendModalOpen(true)}
+            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+          >
+            Notify Users
+          </button>
+        </div>
       </div>
-    </div>
 
-    <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-      <table className="w-full">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Name</th>
-            <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Subject</th>
-            <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Last Updated</th>
-            <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Actions</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-200">
-          {templates.map(template => (
-            <tr key={template.id} className="hover:bg-gray-50 transition-colors">
-              <td className="px-6 py-4">{template.name}</td>
-              <td className="px-6 py-4">{template.subject}</td>
-              <td className="px-6 py-4">{new Date(template.updatedAt).toLocaleDateString()}</td>
-              <td className="px-6 py-4 flex gap-3">
-                <button
-                  onClick={() => {
-                    setEditMode(true);
-                    setCurrentTemplate(template);
-                    setIsTemplateModalOpen(true);
-                  }}
-                  className="text-indigo-600 hover:text-indigo-900 transition-colors"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDeleteTemplate(template.id)}
-                  className="text-red-600 hover:text-red-900 transition-colors"
-                >
-                  Delete
-                </button>
-              </td>
+      <div className="mb-4">
+      <div className="relative w-64">
+         <input
+              type="text"
+              placeholder="Search templates..."
+              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+             <svg className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        
+   
+  </div>
+      </div>
+
+      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+        <table className="w-full">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Name</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Subject</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Last Updated</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {filteredTemplates.map(template => (
+              <tr key={template.id} className="hover:bg-gray-50 transition-colors">
+                <td className="px-6 py-4">{template.name}</td>
+                <td className="px-6 py-4">{template.subject}</td>
+                <td className="px-6 py-4">{new Date(template.updatedAt).toLocaleDateString()}</td>
+                <td className="px-6 py-4 flex gap-3">
+                  <button
+                    onClick={() => {
+                      setEditMode(true);
+                      setCurrentTemplate(template);
+                      setIsTemplateModalOpen(true);
+                    }}
+                    className="text-indigo-600 hover:text-indigo-900 transition-colors"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDeleteTemplate(template.id)}
+                    className="text-red-600 hover:text-red-900 transition-colors"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-{/* templ */}
       {isTemplateModalOpen && (
         <div className="fixed inset-0 bg-gray-800/80 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-4xl">
@@ -274,7 +298,6 @@ const NotificationPage = () => {
         </div>
       )}
 
-      {/*send noti*/}
       {isSendModalOpen && (
         <div className="fixed inset-0 bg-gray-800/80 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-md">

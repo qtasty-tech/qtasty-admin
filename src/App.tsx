@@ -9,6 +9,8 @@ import UsersPage from './pages/UsersPage';
 import TransactionsPage from './pages/TransactionsPage';
 import RestaurantsPage from './pages/RestaurantsPage';
 import NotificationPage from './pages/NotificationPage';
+import UserTransactionsPage from './pages/UserTransactionsPage';
+import RestaurantTransactionsPage from './pages/RestaurantTransactionsPage';
 
 
 
@@ -22,9 +24,14 @@ function App() {
       
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/homes" element={<HomePage />} />
         <Route path="/" element={<DashboardLayout />}>
           <Route path="users" element={<UsersPage />} />
+
           <Route path="transactions" element={<TransactionsPage />} />
+          <Route path="/transactions/user" element={<UserTransactionsPage />} />
+          <Route path="/transactions/restaurant" element={<RestaurantTransactionsPage/>} />
+          
           <Route path="restaurants" element={<RestaurantsPage />} />
           <Route path="newsletter" element={<NotificationPage />} />
         </Route>

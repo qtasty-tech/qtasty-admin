@@ -1,6 +1,10 @@
+// pages/UsersPage.tsx (or wherever you place it)
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { HiOutlineUserGroup, HiOutlineBadgeCheck, HiOutlineShieldCheck } from "react-icons/hi";
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface User {
   id: string;
@@ -31,6 +35,7 @@ const UsersPage = () => {
     role: 'customer'
   });
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
   const itemsPerPage = 10;
 
   const fetchUsers = async () => {
@@ -52,13 +57,17 @@ const UsersPage = () => {
     fetchUsers();
   }, []);
 
-  //pagination
+  const filteredUsers = users.filter(user =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.phone.includes(searchTerm)
+  );
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentUsers = users.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(users.length / itemsPerPage);
+  const currentUsers = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
 
-  // add User
   const handleAddUser = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -86,7 +95,7 @@ const UsersPage = () => {
     try {
       await axios.put(
         `http://localhost:8084/api/admin/users/${userId}/role`,
-        newRole,
+        { role: newRole },
         { headers: { 'Content-Type': 'application/json' } }
       );
       await fetchUsers();
@@ -133,6 +142,34 @@ const UsersPage = () => {
     }
   };
 
+  const generateReport = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text('User Management Report', 14, 22);
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 28);
+
+    const data = users.map(user => [
+      user.name,
+      user.email,
+      user.phone,
+      user.role.charAt(0).toUpperCase() + user.role.slice(1),
+      user.verified ? 'Verified' : 'Unverified'
+    ]);
+
+    autoTable(doc, {
+      head: [['Name', 'Email', 'Phone', 'Role', 'Status']],
+      body: data,
+      startY: 35,
+      theme: 'grid',
+      styles: { fontSize: 10 },
+      headStyles: { fillColor: [63, 81, 181] }
+    });
+
+    doc.save('users-report.pdf');
+  };
+
   if (loading) {
     return (
       <div className="p-8 flex justify-center">
@@ -143,35 +180,68 @@ const UsersPage = () => {
 
   return (
     <div className="p-8">
+      {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-xl shadow-sm">
-          <h3 className="text-gray-500 text-sm mb-2">Total Users</h3>
-          <p className="text-3xl font-bold text-indigo-600">{users.length}</p>
+        {/* Card 1 */}
+        <div className="bg-indigo-50 p-6 rounded-xl flex items-center justify-between">
+          <div>
+            <p className="text-sm text-indigo-600 mb-1">Total Users</p>
+            <p className="text-3xl font-bold text-indigo-700">{users.length}</p>
+          </div>
+          <div className="bg-indigo-100 p-3 rounded-lg">
+            <HiOutlineUserGroup className="w-8 h-8 text-indigo-600" />
+          </div>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm">
-          <h3 className="text-gray-500 text-sm mb-2">Verified Users</h3>
-          <p className="text-3xl font-bold text-green-600">
-            {users.filter(user => user.verified).length}
-          </p>
+
+        {/* Card 2 */}
+        <div className="bg-green-50 p-6 rounded-xl flex items-center justify-between">
+          <div>
+            <p className="text-sm text-green-600 mb-1">Verified Users</p>
+            <p className="text-3xl font-bold text-green-700">{users.filter(user => user.verified).length}</p>
+          </div>
+          <div className="bg-green-100 p-3 rounded-lg">
+            <HiOutlineBadgeCheck className="w-8 h-8 text-green-600" />
+          </div>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm">
-          <h3 className="text-gray-500 text-sm mb-2">Admins</h3>
-          <p className="text-3xl font-bold text-blue-600">
-            {users.filter(user => user.role === 'admin').length}
-          </p>
+
+        {/* Card 3 */}
+        <div className="bg-blue-50 p-6 rounded-xl flex items-center justify-between">
+          <div>
+            <p className="text-sm text-blue-600 mb-1">Admins</p>
+            <p className="text-3xl font-bold text-blue-700">{users.filter(user => user.role === 'admin').length}</p>
+          </div>
+          <div className="bg-blue-100 p-3 rounded-lg">
+            <HiOutlineShieldCheck className="w-8 h-8 text-blue-600" />
+          </div>
         </div>
       </div>
 
-      <div className="flex justify-between mb-6 items-center">
+      {/* Search + Buttons */}
+      <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-800">User Management</h1>
-        <button
-          onClick={() => setIsAddModalOpen(true)}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-        >
-          Add User
-        </button>
+        <div className="flex items-center gap-4">
+          <div className="relative w-64">
+            <input
+              type="text"
+              placeholder="Search users..."
+              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <svg className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <button onClick={generateReport} className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center">
+            Generate Report
+          </button>
+          <button onClick={() => setIsAddModalOpen(true)} className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+            Add User
+          </button>
+        </div>
       </div>
 
+      {/* User Table */}
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         <table className="w-full">
           <thead className="bg-gray-50">
@@ -205,20 +275,15 @@ const UsersPage = () => {
                 <td className="px-6 py-4">
                   <button
                     onClick={() => handleVerifyUser(user.id, !user.verified)}
-                    className={`px-3 py-1 rounded-full text-sm transition-colors ${
-                      user.verified 
-                        ? 'bg-green-100 text-green-800 hover:bg-green-200' 
-                        : 'bg-red-100 text-red-800 hover:bg-red-200'
+                    className={`px-3 py-1 rounded-full text-sm ${
+                      user.verified ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-red-100 text-red-800 hover:bg-red-200'
                     }`}
                   >
                     {user.verified ? 'Verified' : 'Unverified'}
                   </button>
                 </td>
                 <td className="px-6 py-4">
-                  <button
-                    onClick={() => handleDeleteUser(user.id)}
-                    className="text-red-600 hover:text-red-900 transition-colors"
-                  >
+                  <button onClick={() => handleDeleteUser(user.id)} className="text-red-600 hover:text-red-900 transition-colors">
                     Delete
                   </button>
                 </td>
@@ -227,12 +292,12 @@ const UsersPage = () => {
           </tbody>
         </table>
 
-        {/* pagination code */}
+        {/* Pagination */}
         <div className="flex justify-between items-center p-4 bg-gray-50">
           <button
             onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
             disabled={currentPage === 1}
-            className="px-4 py-2 bg-indigo-100 text-indigo-800 rounded-lg hover:bg-indigo-200 transition-colors disabled:opacity-50 disabled:hover:bg-indigo-100"
+            className="px-4 py-2 bg-indigo-100 text-indigo-800 rounded-lg hover:bg-indigo-200 disabled:opacity-50"
           >
             Previous
           </button>
@@ -242,13 +307,14 @@ const UsersPage = () => {
           <button
             onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
-            className="px-4 py-2 bg-indigo-100 text-indigo-800 rounded-lg hover:bg-indigo-200 transition-colors disabled:opacity-50 disabled:hover:bg-indigo-100"
+            className="px-4 py-2 bg-indigo-100 text-indigo-800 rounded-lg hover:bg-indigo-200 disabled:opacity-50"
           >
             Next
           </button>
         </div>
       </div>
 
+      {/* Add User Modal */}
       {isAddModalOpen && (
         <div className="fixed inset-0 bg-gray-800/80 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-md">
@@ -260,72 +326,68 @@ const UsersPage = () => {
                   <input
                     type="text"
                     required
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     value={newUser.name}
-                    onChange={(e) => setNewUser(prev => ({...prev, name: e.target.value}))}
+                    onChange={(e) => setNewUser(prev => ({ ...prev, name: e.target.value }))}
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
                   <input
                     type="email"
                     required
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     value={newUser.email}
-                    onChange={(e) => setNewUser(prev => ({...prev, email: e.target.value}))}
+                    onChange={(e) => setNewUser(prev => ({ ...prev, email: e.target.value }))}
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
                   <input
-                    type="tel"
+                    type="text"
                     required
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     value={newUser.phone}
-                    onChange={(e) => setNewUser(prev => ({...prev, phone: e.target.value}))}
+                    onChange={(e) => setNewUser(prev => ({ ...prev, phone: e.target.value }))}
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
                   <input
                     type="password"
                     required
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     value={newUser.password}
-                    onChange={(e) => setNewUser(prev => ({...prev, password: e.target.value}))}
+                    onChange={(e) => setNewUser(prev => ({ ...prev, password: e.target.value }))}
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
                   <select
+                    required
                     value={newUser.role}
-                    onChange={(e) => setNewUser(prev => ({
-                      ...prev,
-                      role: e.target.value as NewUser['role']
-                    }))}
+                    onChange={(e) => setNewUser(prev => ({ ...prev, role: e.target.value as User['role'] }))}
                     className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   >
-                    <option value="admin">Admin</option>
                     <option value="customer">Customer</option>
+                    <option value="admin">Admin</option>
                     <option value="restaurant">Restaurant</option>
                     <option value="delivery">Delivery</option>
                   </select>
                 </div>
-              </div>
-              <div className="mt-6 flex justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setIsAddModalOpen(false)}
-                  className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-                >
-                  Add User
-                </button>
+
+                <div className="flex justify-end">
+                  <button
+                    type="submit"
+                    className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+                  >
+                    Add User
+                  </button>
+                </div>
               </div>
             </form>
           </div>

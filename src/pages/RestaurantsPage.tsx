@@ -4,6 +4,9 @@ import { toast } from 'react-toastify';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import { HiOutlineOfficeBuilding, HiOutlineBadgeCheck, HiOutlineStar } from "react-icons/hi"
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -16,7 +19,7 @@ interface Restaurant {
   id: string;
   name: string;
   owner: string;
-  location: string;
+  address: string;
   rating: number;
   verified: boolean;
   createdAt: Date;
@@ -38,6 +41,91 @@ interface NominatimResult {
     display_name: string;
   }
 
+
+  const generateVerificationEmailHTML = (restaurant: Restaurant, isVerified: boolean) => {
+    const statusColor = isVerified ? "#059669" : "#dc2626";
+    const statusText = isVerified ? "Verified" : "Unverified";
+    
+    return `
+      <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { 
+              background-color: ${statusColor};
+              color: white;
+              padding: 20px;
+              border-radius: 8px 8px 0 0;
+              text-align: center;
+            }
+            .content { 
+              padding: 30px;
+              background-color: #f8fafc;
+              border-radius: 0 0 8px 8px;
+            }
+            .status {
+              display: inline-block;
+              padding: 8px 16px;
+              border-radius: 20px;
+              font-weight: bold;
+              background-color: ${isVerified ? "#dcfce7" : "#fee2e2"};
+              color: ${isVerified ? "#166534" : "#991b1b"};
+            }
+            .details-table {
+              width: 100%;
+              margin-top: 20px;
+              border-collapse: collapse;
+            }
+            .details-table td {
+              padding: 12px;
+              border-bottom: 1px solid #e2e8f0;
+            }
+            .details-table td:first-child {
+              font-weight: bold;
+              width: 30%;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Restaurant Verification Update</h1>
+            </div>
+            <div class="content">
+              <p class="status">${statusText}</p>
+              
+              <table class="details-table">
+                <tr>
+                  <td>Restaurant Name</td>
+                  <td>${restaurant.name}</td>
+                </tr>
+                <tr>
+                  <td>Owner ID</td>
+                  <td>${restaurant.owner}</td>
+                </tr>
+                <tr>
+                  <td>Address</td>
+                  <td>${restaurant.address}</td>
+                </tr>
+                <tr>
+                  <td>Verification Date</td>
+                  <td>${new Date().toLocaleDateString()}</td>
+                </tr>
+              </table>
+              
+              <p style="margin-top: 25px; color: #64748b;">
+                ${isVerified 
+                  ? "Your restaurant is now verified and visible to all users!" 
+                  : "Your restaurant verification has been removed. Please contact support for more information."}
+              </p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+  };
+  
 const RestaurantsPage = () => {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(true);
@@ -54,7 +142,41 @@ const RestaurantsPage = () => {
   const [searchResults, setSearchResults] = useState<User[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-
+  const generateReport = () => {
+    const doc = new jsPDF();
+    
+    // Header
+    doc.setFontSize(18);
+    doc.text('Restaurant Management Report', 14, 22);
+    
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 28);
+    
+    // Prepare the data
+    const data = restaurants.map(restaurant => [
+      restaurant.name,
+      restaurant.owner,
+      restaurant.address,
+      `${restaurant.rating.toFixed(1)}/5`,
+      restaurant.verified ? 'Verified' : 'Unverified',
+      new Date(restaurant.createdAt).toLocaleDateString()
+    ]);
+    
+    // Create the table
+    autoTable(doc, {
+      head: [['Name', 'Owner ID', 'Address', 'Rating', 'Status', 'Created At']],
+      body: data,
+      startY: 35,
+      theme: 'grid',
+      styles: { fontSize: 10 },
+      headStyles: { fillColor: [63, 81, 181] }
+    });
+    
+    // Save the PDF
+    doc.save('restaurants-report.pdf');
+  };
+  
   useEffect(() => {
     const geocodeLocation = async (location: string) => {
       setIsGeocoding(true);
@@ -84,10 +206,10 @@ const RestaurantsPage = () => {
     };
 
     if (mapRestaurant) {
-      geocodeLocation(mapRestaurant.location);
+      geocodeLocation(mapRestaurant.address);
     }
   }, [mapRestaurant]);
-
+  
   const fetchRestaurants = async () => {
     try {
       const response = await axios.get('http://localhost:8084/api/admin/restaurants');
@@ -117,6 +239,16 @@ const RestaurantsPage = () => {
     try {
       await axios.put(`http://localhost:8084/api/admin/restaurants/${id}/verify`,{ isVerified: verified },
         { headers: { 'Content-Type': 'application/json' } });
+
+        const restaurant = restaurants.find(r => r.id === id);
+        if (restaurant) {
+          const htmlContent = generateVerificationEmailHTML(restaurant, verified);
+          await axios.post('http://localhost:8085/api/notifications/send-verification', {
+            userId: restaurant.owner,
+            htmlContent,
+            subject: `Restaurant ${verified ? 'Verified' : 'Unverified'} - ${restaurant.name}`
+          });
+        }
       await fetchRestaurants();
       toast.success('Verification status updated');
     } catch (error) {
@@ -163,25 +295,41 @@ const RestaurantsPage = () => {
 
   return (
     <div className="p-8">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-xl shadow-sm">
-          <h3 className="text-gray-500 text-sm mb-2">Total Restaurants</h3>
-          <p className="text-3xl font-bold text-indigo-600">{restaurants.length}</p>
-        </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm">
-          <h3 className="text-gray-500 text-sm mb-2">Verified Restaurants</h3>
-          <p className="text-3xl font-bold text-green-600">
-            {restaurants.filter(r => r.verified).length}
-          </p>
-        </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm">
-          <h3 className="text-gray-500 text-sm mb-2">Average Rating</h3>
-          <p className="text-3xl font-bold text-blue-600">
-          {(restaurants.reduce((acc, curr) => acc + curr.rating, 0) / restaurants.length || 0).toFixed(1)}
-          </p>
-        </div>
-      </div>
+     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+  <div className="bg-indigo-50 p-6 rounded-xl flex items-center justify-between">
+    <div>
+      <p className="text-sm text-indigo-600 mb-1">Total Restaurants</p>
+      <p className="text-3xl font-bold text-indigo-700">{restaurants.length}</p>
+    </div>
+    <div className="bg-indigo-100 p-3 rounded-lg">
+      <HiOutlineOfficeBuilding className="w-8 h-8 text-indigo-600" />
+    </div>
+  </div>
 
+  <div className="bg-green-50 p-6 rounded-xl flex items-center justify-between">
+    <div>
+      <p className="text-sm text-green-600 mb-1">Verified Restaurants</p>
+      <p className="text-3xl font-bold text-green-700">
+        {restaurants.filter(r => r.verified).length}
+      </p>
+    </div>
+    <div className="bg-green-100 p-3 rounded-lg">
+      <HiOutlineBadgeCheck className="w-8 h-8 text-green-600" />
+    </div>
+  </div>
+
+  <div className="bg-blue-50 p-6 rounded-xl flex items-center justify-between">
+    <div>
+      <p className="text-sm text-blue-600 mb-1">Average Rating</p>
+      <p className="text-3xl font-bold text-blue-700">
+        {(restaurants.reduce((acc, curr) => acc + curr.rating, 0) / restaurants.length || 0).toFixed(1)}
+      </p>
+    </div>
+    <div className="bg-blue-100 p-3 rounded-lg">
+      <HiOutlineStar className="w-8 h-8 text-blue-600" />
+    </div>
+  </div>
+</div>
       <div className="flex justify-between mb-6 items-center">
         <h1 className="text-3xl font-bold text-gray-800">Restaurant Management</h1>
         <button
@@ -191,6 +339,28 @@ const RestaurantsPage = () => {
           Add Restaurant
         </button>
       </div>
+      <div className="flex items-center gap-4 mb-4">
+      <div className="relative w-64">
+            <input
+              type="text"
+              placeholder="Search users..."
+              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <svg className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        
+   
+  </div>
+  <button
+      onClick={() => generateReport()}
+      className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+    >
+      Generate Report
+    </button>
+</div>
 
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         <table className="w-full">
@@ -205,11 +375,16 @@ const RestaurantsPage = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {currentRestaurants.map(restaurant => (
+          {currentRestaurants
+  .filter(restaurant =>
+    restaurant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    restaurant.address.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+  .map(restaurant => (
               <tr key={restaurant.id} className="hover:bg-gray-50 transition-colors">
                 <td className="px-6 py-4">{restaurant.name}</td>
                 <td className="px-6 py-4">{restaurant.owner}</td>
-                <td className="px-6 py-4">{restaurant.location}</td>
+                <td className="px-6 py-4">{restaurant.address}</td>
                 <td className="px-6 py-4">{restaurant.rating}/5</td>
                 <td className="px-6 py-4">
                   <button
@@ -365,7 +540,7 @@ const RestaurantsPage = () => {
               <Marker position={mapCoordinates}>
                 <Popup>
                   <div className="font-semibold">{mapRestaurant.name}</div>
-                  <div>{mapRestaurant.location}</div>
+                  <div>{mapRestaurant.address}</div>
                 </Popup>
               </Marker>
             </MapContainer>
