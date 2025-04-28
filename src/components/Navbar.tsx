@@ -9,13 +9,13 @@ const Navbar = () => {
   const { user, logout } = useAuth();
 
   return (
-    <nav className="bg-gradient-to-r from-emerald-700 to-green-500 backdrop-blur-md border-b border-emerald-700/30">
+    <nav className="bg-gradient-to-r from-emerald-600 to-green-500 backdrop-blur-md border-b border-emerald-700/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link 
               to="/" 
-              className="text-3xl font-bold bg-gradient-to-r from-emerald-300 to-green-200 bg-clip-text text-transparent tracking-tight"
+              className="text-3xl font-bold bg-gradient-to-r from-emerald-100 to-green-50 bg-clip-text text-transparent tracking-tight"
             >
               Dashboard
             </Link>
