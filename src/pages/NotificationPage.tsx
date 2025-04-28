@@ -187,7 +187,7 @@ const NotificationPage = () => {
          <input
               type="text"
               placeholder="Search templates..."
-              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-400 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -199,9 +199,9 @@ const NotificationPage = () => {
   </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-white rounded-xl shadow-2xs overflow-hidden">
         <table className="w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-gray-300">
             <tr>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Name</th>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Subject</th>
@@ -209,7 +209,7 @@ const NotificationPage = () => {
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-gray-400">
             {filteredTemplates.map(template => (
               <tr key={template.id} className="hover:bg-gray-50 transition-colors">
                 <td className="px-6 py-4">{template.name}</td>
@@ -222,7 +222,7 @@ const NotificationPage = () => {
                       setCurrentTemplate(template);
                       setIsTemplateModalOpen(true);
                     }}
-                    className="text-indigo-600 hover:text-indigo-900 transition-colors"
+                    className="px-6 py-1 bg-indigo-200 text-indigo-800 rounded-lg hover:bg-indigo-300 transition-colors disabled:opacity-50"
                   >
                     Edit
                   </button>

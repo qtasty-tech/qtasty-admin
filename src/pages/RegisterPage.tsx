@@ -29,7 +29,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-green-200 to-green-300 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 transition-all duration-300 hover:shadow-2xl">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-2">Create Account</h1>
@@ -51,7 +51,7 @@ const RegisterPage = () => {
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none"
+               className="w-full px-4 py-3 rounded-lg border border-gray-400 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
               placeholder="Enter your full name"
             />
           </div>
@@ -64,7 +64,7 @@ const RegisterPage = () => {
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none"
+               className="w-full px-4 py-3 rounded-lg border border-gray-400 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
               placeholder="Enter your email"
             />
           </div>
@@ -77,7 +77,7 @@ const RegisterPage = () => {
               type="tel"
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none"
+               className="w-full px-4 py-3 rounded-lg border border-gray-400 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
               placeholder="Enter your phone number"
             />
           </div>
@@ -90,14 +90,14 @@ const RegisterPage = () => {
               type="password"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none"
+               className="w-full px-4 py-3 rounded-lg border border-gray-400 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
               placeholder="Create a password"
             />
           </div>
           
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-[1.01]"
+            className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-[1.01]"
           >
             Create Account
           </button>
@@ -107,7 +107,7 @@ const RegisterPage = () => {
           Already have an account?{" "}
           <Link 
             to="/login" 
-            className="text-blue-600 hover:text-blue-700 font-medium"
+            className="text-green-600 hover:text-green-700 font-medium"
           >
             Login here
           </Link>

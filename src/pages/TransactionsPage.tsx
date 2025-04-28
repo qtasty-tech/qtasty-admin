@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import Modal from 'react-modal';
+import { FiSearch } from "react-icons/fi";
 
 interface Transaction {
   id: string;
@@ -106,7 +107,7 @@ const TransactionsPage = () => {
 
   const fetchTransactions = async () => {
     try {
-      const response = await axios.get('http://localhost:8084/api/transactions');
+      const response = await axios.get('http://localhost:8086/api/transactions');
       setTransactions(response.data);
     } catch (error) {
       console.error('Error fetching transactions:', error);
@@ -204,23 +205,37 @@ const TransactionsPage = () => {
   return (
     <div className="p-8">
        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <Link
-          to="/transactions/user"
-          className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow"
-        >
-          <h3 className="text-gray-500 text-sm mb-2">User Transactions</h3>
-          <p className="text-3xl font-bold text-indigo-600">View</p>
-        </Link>
-        <Link
+       <Link
+  to="/transactions/user"
+  className="group bg-green-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:bg-emerald-50/50 flex flex-col items-center justify-center gap-3"
+>
+  <h3 className="text-gray-500 text-sm ">User Transactions</h3>
+  <div className="flex flex-col gap-2">
+    <FiSearch className="w-12 h-12 text-emerald-600 group-hover:text-emerald-700 transition-colors" />
+   
+  </div>
+</Link>
+
+<Link
+  to="/transactions/restaurant"
+  className="group bg-green-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:bg-emerald-50/50 flex flex-col items-center justify-center gap-3"
+>
+  <h3 className="text-gray-500 text-sm ">Restaurant Transactions</h3>
+  <div className="flex flex-col gap-2">
+    <FiSearch className="w-12 h-12 text-emerald-600 group-hover:text-emerald-700 transition-colors" />
+   
+  </div>
+</Link>
+        {/* <Link
           to="/transactions/restaurant"
           className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow"
         >
           <h3 className="text-gray-500 text-sm mb-2">Restaurant Transactions</h3>
           <p className="text-3xl font-bold text-green-600">View</p>
-        </Link>
+        </Link> */}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-  <div className="bg-indigo-50 p-6 rounded-xl flex items-center justify-between">
+  <div className="bg-indigo-200 p-6 rounded-xl flex items-center justify-between">
     <div>
       <p className="text-sm text-indigo-600 mb-1">Total Transactions</p>
       <p className="text-3xl font-bold text-indigo-700">{transactions.length}</p>
@@ -230,7 +245,7 @@ const TransactionsPage = () => {
     </div>
   </div>
 
-  <div className="bg-green-50 p-6 rounded-xl flex items-center justify-between">
+  <div className="bg-green-200 p-6 rounded-xl flex items-center justify-between">
     <div>
       <p className="text-sm text-green-600 mb-1">Today's Transactions</p>
       <p className="text-3xl font-bold text-green-700">
@@ -244,7 +259,7 @@ const TransactionsPage = () => {
     </div>
   </div>
 
-  <div className="bg-purple-50 p-6 rounded-xl flex items-center justify-between">
+  <div className="bg-purple-200 p-6 rounded-xl flex items-center justify-between">
     <div>
       <p className="text-sm text-purple-600 mb-1">Total Amount</p>
       <p className="text-3xl font-bold text-purple-700">
@@ -306,7 +321,7 @@ const TransactionsPage = () => {
       {/* Transactions Table */}
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         <table className="w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-gray-200">
             <tr>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Name</th>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Total Amount</th>
@@ -315,7 +330,7 @@ const TransactionsPage = () => {
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-gray-400">
             {filteredTransactions.map((transaction) => (
               <tr key={transaction.id}>
                 <td className="px-6 py-4">{transaction.userName}</td>
@@ -331,7 +346,7 @@ const TransactionsPage = () => {
                       setSelectedTransaction(transaction);
                       setModalIsOpen(true);
                     }}
-                    className="px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded-md hover:bg-indigo-200 transition-colors flex items-center"
+                    className="px-3 py-1.5 bg-indigo-200 text-indigo-700 rounded-md hover:bg-indigo-300 transition-colors flex items-center"
                   >
                     <svg
                       className="w-4 h-4 mr-1"
@@ -359,7 +374,7 @@ const TransactionsPage = () => {
     const htmlContent = generateTransactionEmailHTML(transaction);
     sendTransactionEmail(transaction.userId, htmlContent);
   }}
-  className="px-3 py-1.5 bg-green-100 text-green-700 rounded-md hover:bg-green-200 transition-colors flex items-center"
+  className="px-3 py-1.5 bg-green-200 text-green-700 rounded-md hover:bg-green-300 transition-colors flex items-center"
 >
                     <svg
                       className="w-4 h-4 mr-1"
@@ -436,13 +451,13 @@ const TransactionsPage = () => {
               </div>
 
               {selectedTransaction.orders.map((order, index) => (
-                <div key={order.orderId} className="border rounded-lg p-4 bg-gray-50">
+                <div key={order.orderId} className="border rounded-lg p-4 bg-gray-200">
                   <div className="flex justify-between items-center mb-3">
                     <h3 className="font-semibold text-gray-800">Order #{index + 1}</h3>
                     <span className={`px-2 py-1 rounded text-sm ${
                       order.status === 'completed' 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-yellow-100 text-yellow-800'
+                        ? 'bg-green-300 text-green-800' 
+                        : 'bg-yellow-300 text-yellow-800'
                     }`}>
                       {order.status}
                     </span>
@@ -458,7 +473,7 @@ const TransactionsPage = () => {
                     </thead>
                     <tbody>
                       {order.items.map((item, itemIndex) => (
-                        <tr key={itemIndex} className="hover:bg-gray-100">
+                        <tr key={itemIndex} className="hover:bg-gray-200">
                           <td className="py-2 text-gray-800">{item.name}</td>
                           <td className="py-2 text-gray-800">{item.quantity}</td>
                           <td className="py-2 text-gray-800">${item.price.toFixed(2)}</td>
@@ -473,7 +488,7 @@ const TransactionsPage = () => {
               <div className="mt-6 flex justify-end space-x-3">
                 <button
                   onClick={() => setModalIsOpen(false)}
-                  className="px-4 py-2 border rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                  className="px-4 py-2 border rounded-lg text-gray-700 hover:bg-gray-200 transition-colors"
                 >
                   Close
                 </button>
