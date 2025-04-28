@@ -346,7 +346,7 @@ const TransactionsPage = () => {
                       setSelectedTransaction(transaction);
                       setModalIsOpen(true);
                     }}
-                    className="px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded-md hover:bg-indigo-200 transition-colors flex items-center"
+                    className="px-3 py-1.5 bg-indigo-200 text-indigo-700 rounded-md hover:bg-indigo-300 transition-colors flex items-center"
                   >
                     <svg
                       className="w-4 h-4 mr-1"
@@ -374,7 +374,7 @@ const TransactionsPage = () => {
     const htmlContent = generateTransactionEmailHTML(transaction);
     sendTransactionEmail(transaction.userId, htmlContent);
   }}
-  className="px-3 py-1.5 bg-green-100 text-green-700 rounded-md hover:bg-green-200 transition-colors flex items-center"
+  className="px-3 py-1.5 bg-green-200 text-green-700 rounded-md hover:bg-green-300 transition-colors flex items-center"
 >
                     <svg
                       className="w-4 h-4 mr-1"
@@ -451,13 +451,13 @@ const TransactionsPage = () => {
               </div>
 
               {selectedTransaction.orders.map((order, index) => (
-                <div key={order.orderId} className="border rounded-lg p-4 bg-gray-50">
+                <div key={order.orderId} className="border rounded-lg p-4 bg-gray-200">
                   <div className="flex justify-between items-center mb-3">
                     <h3 className="font-semibold text-gray-800">Order #{index + 1}</h3>
                     <span className={`px-2 py-1 rounded text-sm ${
                       order.status === 'completed' 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-yellow-100 text-yellow-800'
+                        ? 'bg-green-300 text-green-800' 
+                        : 'bg-yellow-300 text-yellow-800'
                     }`}>
                       {order.status}
                     </span>
@@ -473,7 +473,7 @@ const TransactionsPage = () => {
                     </thead>
                     <tbody>
                       {order.items.map((item, itemIndex) => (
-                        <tr key={itemIndex} className="hover:bg-gray-100">
+                        <tr key={itemIndex} className="hover:bg-gray-200">
                           <td className="py-2 text-gray-800">{item.name}</td>
                           <td className="py-2 text-gray-800">{item.quantity}</td>
                           <td className="py-2 text-gray-800">${item.price.toFixed(2)}</td>
@@ -488,7 +488,7 @@ const TransactionsPage = () => {
               <div className="mt-6 flex justify-end space-x-3">
                 <button
                   onClick={() => setModalIsOpen(false)}
-                  className="px-4 py-2 border rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                  className="px-4 py-2 border rounded-lg text-gray-700 hover:bg-gray-200 transition-colors"
                 >
                   Close
                 </button>
