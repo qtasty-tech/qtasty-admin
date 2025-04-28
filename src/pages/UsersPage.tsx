@@ -183,7 +183,7 @@ const UsersPage = () => {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {/* Card 1 */}
-        <div className="bg-indigo-50 p-6 rounded-xl flex items-center justify-between">
+        <div className="bg-indigo-200 p-6 rounded-xl flex items-center justify-between">
           <div>
             <p className="text-sm text-indigo-600 mb-1">Total Users</p>
             <p className="text-3xl font-bold text-indigo-700">{users.length}</p>
@@ -194,7 +194,7 @@ const UsersPage = () => {
         </div>
 
         {/* Card 2 */}
-        <div className="bg-green-50 p-6 rounded-xl flex items-center justify-between">
+        <div className="bg-green-200 p-6 rounded-xl flex items-center justify-between">
           <div>
             <p className="text-sm text-green-600 mb-1">Verified Users</p>
             <p className="text-3xl font-bold text-green-700">{users.filter(user => user.verified).length}</p>
@@ -205,7 +205,7 @@ const UsersPage = () => {
         </div>
 
         {/* Card 3 */}
-        <div className="bg-blue-50 p-6 rounded-xl flex items-center justify-between">
+        <div className="bg-blue-200 p-6 rounded-xl flex items-center justify-between">
           <div>
             <p className="text-sm text-blue-600 mb-1">Admins</p>
             <p className="text-3xl font-bold text-blue-700">{users.filter(user => user.role === 'admin').length}</p>
@@ -244,7 +244,7 @@ const UsersPage = () => {
       {/* User Table */}
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         <table className="w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-gray-200">
             <tr>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Name</th>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Email</th>
@@ -254,7 +254,7 @@ const UsersPage = () => {
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-gray-400">
             {currentUsers.map(user => (
               <tr key={user.id} className="hover:bg-gray-50 transition-colors">
                 <td className="px-6 py-4">{user.name}</td>
@@ -264,7 +264,7 @@ const UsersPage = () => {
                   <select
                     value={user.role}
                     onChange={(e) => handleRoleChange(user.id, e.target.value as User['role'])}
-                    className="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm focus:outline-none"
+                    className="px-3 py-1 bg-indigo-200 text-indigo-800 rounded-full text-sm focus:outline-none"
                   >
                     <option value="admin">Admin</option>
                     <option value="customer">Customer</option>
