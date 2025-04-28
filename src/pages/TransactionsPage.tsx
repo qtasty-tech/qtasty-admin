@@ -235,7 +235,7 @@ const TransactionsPage = () => {
         </Link> */}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-  <div className="bg-indigo-50 p-6 rounded-xl flex items-center justify-between">
+  <div className="bg-indigo-200 p-6 rounded-xl flex items-center justify-between">
     <div>
       <p className="text-sm text-indigo-600 mb-1">Total Transactions</p>
       <p className="text-3xl font-bold text-indigo-700">{transactions.length}</p>
@@ -245,7 +245,7 @@ const TransactionsPage = () => {
     </div>
   </div>
 
-  <div className="bg-green-50 p-6 rounded-xl flex items-center justify-between">
+  <div className="bg-green-200 p-6 rounded-xl flex items-center justify-between">
     <div>
       <p className="text-sm text-green-600 mb-1">Today's Transactions</p>
       <p className="text-3xl font-bold text-green-700">
@@ -259,7 +259,7 @@ const TransactionsPage = () => {
     </div>
   </div>
 
-  <div className="bg-purple-50 p-6 rounded-xl flex items-center justify-between">
+  <div className="bg-purple-200 p-6 rounded-xl flex items-center justify-between">
     <div>
       <p className="text-sm text-purple-600 mb-1">Total Amount</p>
       <p className="text-3xl font-bold text-purple-700">
@@ -321,7 +321,7 @@ const TransactionsPage = () => {
       {/* Transactions Table */}
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         <table className="w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-gray-200">
             <tr>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Name</th>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Total Amount</th>
@@ -330,7 +330,7 @@ const TransactionsPage = () => {
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-gray-400">
             {filteredTransactions.map((transaction) => (
               <tr key={transaction.id}>
                 <td className="px-6 py-4">{transaction.userName}</td>
