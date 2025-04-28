@@ -199,9 +199,9 @@ const NotificationPage = () => {
   </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-white rounded-xl shadow-2xs overflow-hidden">
         <table className="w-full">
-          <thead className="bg-gray-400">
+          <thead className="bg-gray-300">
             <tr>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Name</th>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Subject</th>
@@ -222,7 +222,7 @@ const NotificationPage = () => {
                       setCurrentTemplate(template);
                       setIsTemplateModalOpen(true);
                     }}
-                    className="px-4 py-2 bg-indigo-400 text-indigo-800 rounded-lg hover:bg-indigo-300 transition-colors disabled:opacity-50"
+                    className="px-6 py-1 bg-indigo-100 text-indigo-800 rounded-lg hover:bg-indigo-200 transition-colors disabled:opacity-50"
                   >
                     Edit
                   </button>
