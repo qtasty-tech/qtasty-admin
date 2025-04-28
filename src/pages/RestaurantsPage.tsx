@@ -296,7 +296,7 @@ const RestaurantsPage = () => {
   return (
     <div className="p-8">
      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-  <div className="bg-indigo-50 p-6 rounded-xl flex items-center justify-between">
+  <div className="bg-indigo-200 p-6 rounded-xl flex items-center justify-between">
     <div>
       <p className="text-sm text-indigo-600 mb-1">Total Restaurants</p>
       <p className="text-3xl font-bold text-indigo-700">{restaurants.length}</p>
@@ -306,7 +306,7 @@ const RestaurantsPage = () => {
     </div>
   </div>
 
-  <div className="bg-green-50 p-6 rounded-xl flex items-center justify-between">
+  <div className="bg-green-200 p-6 rounded-xl flex items-center justify-between">
     <div>
       <p className="text-sm text-green-600 mb-1">Verified Restaurants</p>
       <p className="text-3xl font-bold text-green-700">
@@ -318,7 +318,7 @@ const RestaurantsPage = () => {
     </div>
   </div>
 
-  <div className="bg-blue-50 p-6 rounded-xl flex items-center justify-between">
+  <div className="bg-blue-200 p-6 rounded-xl flex items-center justify-between">
     <div>
       <p className="text-sm text-blue-600 mb-1">Average Rating</p>
       <p className="text-3xl font-bold text-blue-700">
@@ -364,7 +364,7 @@ const RestaurantsPage = () => {
 
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         <table className="w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-gray-200">
             <tr>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Name</th>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Owner ID</th>
@@ -381,7 +381,7 @@ const RestaurantsPage = () => {
     restaurant.address.toLowerCase().includes(searchQuery.toLowerCase())
   )
   .map(restaurant => (
-              <tr key={restaurant.id} className="hover:bg-gray-50 transition-colors">
+              <tr key={restaurant.id} className="hover:bg-gray-200 transition-colors">
                 <td className="px-6 py-4">{restaurant.name}</td>
                 <td className="px-6 py-4">{restaurant.owner}</td>
                 <td className="px-6 py-4">{restaurant.address}</td>
@@ -391,8 +391,8 @@ const RestaurantsPage = () => {
                     onClick={() => handleVerifyRestaurant(restaurant.id, !restaurant.verified)}
                     className={`px-3 py-1 rounded-full text-sm transition-colors ${
                       restaurant.verified 
-                        ? 'bg-green-100 text-green-800 hover:bg-green-200' 
-                        : 'bg-red-100 text-red-800 hover:bg-red-200'
+                        ? 'bg-green-200 text-green-800 hover:bg-green-300' 
+                        : 'bg-red-200 text-red-800 hover:bg-red-300'
                     }`}
                   >
                     {restaurant.verified ? 'Verified' : 'Unverified'}
@@ -417,11 +417,11 @@ const RestaurantsPage = () => {
           </tbody>
         </table>
 
-        <div className="flex justify-between items-center p-4 bg-gray-50">
+        <div className="flex justify-between items-center p-4 bg-gray-200">
           <button
             onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
             disabled={currentPage === 1}
-            className="px-4 py-2 bg-indigo-100 text-indigo-800 rounded-lg hover:bg-indigo-200 transition-colors disabled:opacity-50"
+            className="px-4 py-2 bg-indigo-200 text-indigo-800 rounded-lg hover:bg-indigo-200 transition-colors disabled:opacity-50"
           >
             Previous
           </button>
@@ -431,7 +431,7 @@ const RestaurantsPage = () => {
           <button
             onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
-            className="px-4 py-2 bg-indigo-100 text-indigo-800 rounded-lg hover:bg-indigo-200 transition-colors disabled:opacity-50"
+            className="px-4 py-2 bg-indigo-200 text-indigo-800 rounded-lg hover:bg-indigo-200 transition-colors disabled:opacity-50"
           >
             Next
           </button>
