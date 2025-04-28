@@ -254,7 +254,7 @@ const UsersPage = () => {
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-400">
+          <tbody className="divide-y divide-gray-500">
             {currentUsers.map(user => (
               <tr key={user.id} className="hover:bg-gray-50 transition-colors">
                 <td className="px-6 py-4">{user.name}</td>
@@ -276,7 +276,7 @@ const UsersPage = () => {
                   <button
                     onClick={() => handleVerifyUser(user.id, !user.verified)}
                     className={`px-3 py-1 rounded-full text-sm ${
-                      user.verified ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-red-100 text-red-800 hover:bg-red-200'
+                      user.verified ? 'bg-green-200 text-green-800 hover:bg-green-300' : 'bg-red-200 text-red-800 hover:bg-red-300'
                     }`}
                   >
                     {user.verified ? 'Verified' : 'Unverified'}
@@ -293,11 +293,11 @@ const UsersPage = () => {
         </table>
 
         {/* Pagination */}
-        <div className="flex justify-between items-center p-4 bg-gray-50">
+        <div className="flex justify-between items-center p-4 bg-gray-300">
           <button
             onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
             disabled={currentPage === 1}
-            className="px-4 py-2 bg-indigo-100 text-indigo-800 rounded-lg hover:bg-indigo-200 disabled:opacity-50"
+            className="px-4 py-2 bg-indigo-200 text-indigo-800 rounded-lg hover:bg-indigo-300 disabled:opacity-50"
           >
             Previous
           </button>
@@ -307,7 +307,7 @@ const UsersPage = () => {
           <button
             onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
-            className="px-4 py-2 bg-indigo-100 text-indigo-800 rounded-lg hover:bg-indigo-200 disabled:opacity-50"
+            className="px-4 py-2 bg-indigo-200 text-indigo-800 rounded-lg hover:bg-indigo-300 disabled:opacity-50"
           >
             Next
           </button>
