@@ -254,7 +254,7 @@ const UsersPage = () => {
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-300">
+          <tbody className="divide-y divide-gray-400">
             {currentUsers.map(user => (
               <tr key={user.id} className="hover:bg-gray-50 transition-colors">
                 <td className="px-6 py-4">{user.name}</td>
