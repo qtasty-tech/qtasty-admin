@@ -222,7 +222,7 @@ const NotificationPage = () => {
                       setCurrentTemplate(template);
                       setIsTemplateModalOpen(true);
                     }}
-                    className="px-6 py-1 bg-indigo-100 text-indigo-800 rounded-lg hover:bg-indigo-200 transition-colors disabled:opacity-50"
+                    className="px-6 py-1 bg-indigo-200 text-indigo-800 rounded-lg hover:bg-indigo-300 transition-colors disabled:opacity-50"
                   >
                     Edit
                   </button>
