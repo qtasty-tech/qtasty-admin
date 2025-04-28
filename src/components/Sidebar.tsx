@@ -7,14 +7,14 @@ const Sidebar = () => {
 
   return (
     <div 
-      className={`sticky top-0 h-screen bg-gray-900 text-white transition-all duration-300 ${
+      className={`sticky top-0 h-screen bg-gray-900 text-green-200 transition-all duration-300 ${
         isExpanded ? 'w-64' : 'w-20'
       }`}
       onMouseEnter={() => setIsExpanded(true)}
       onMouseLeave={() => setIsExpanded(false)}
     >
       <div className="p-6">
-        <div className={`text-2xl font-bold ${!isExpanded && 'hidden'}`}>
+        <div className={`text-2xl text-green-150  font-bold ${!isExpanded && 'hidden'}`}>
           Admin Panel
         </div>
       </div>

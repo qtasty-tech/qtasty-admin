@@ -14,7 +14,7 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       await login(email, password);
-      navigate('/');
+      navigate('/users');
     } catch (err) {
       if (axios.isAxiosError(err)) {
         setError(err.response?.data?.error || 'Login failed');
@@ -25,7 +25,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 transition-all duration-300 hover:shadow-2xl">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-2">Welcome Back</h1>
@@ -47,7 +47,7 @@ const LoginPage = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none"
+              className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
               placeholder="Enter your email"
             />
           </div>
@@ -60,14 +60,14 @@ const LoginPage = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none"
+              className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
               placeholder="Enter your password"
             />
           </div>
           
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-[1.01]"
+            className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-[1.01]"
           >
             Sign In
           </button>
@@ -77,7 +77,7 @@ const LoginPage = () => {
           Don't have an account?{" "}
           <Link 
             to="/register" 
-            className="text-blue-600 hover:text-blue-700 font-medium"
+            className="text-green-600 hover:text-green-700 font-medium"
           >
             Register here
           </Link>
