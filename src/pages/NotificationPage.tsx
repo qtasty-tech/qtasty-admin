@@ -187,7 +187,7 @@ const NotificationPage = () => {
          <input
               type="text"
               placeholder="Search templates..."
-              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-400 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
