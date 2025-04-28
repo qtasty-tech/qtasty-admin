@@ -207,7 +207,7 @@ const TransactionsPage = () => {
        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
        <Link
   to="/transactions/user"
-  className="group bg-green-300 p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:bg-emerald-50/50 flex flex-col items-center justify-center gap-3"
+  className="group bg-green-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:bg-emerald-50/50 flex flex-col items-center justify-center gap-3"
 >
   <h3 className="text-gray-500 text-sm ">User Transactions</h3>
   <div className="flex flex-col gap-2">
@@ -218,7 +218,7 @@ const TransactionsPage = () => {
 
 <Link
   to="/transactions/restaurant"
-  className="group bg-green-300 p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:bg-emerald-50/50 flex flex-col items-center justify-center gap-3"
+  className="group bg-green-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:bg-emerald-50/50 flex flex-col items-center justify-center gap-3"
 >
   <h3 className="text-gray-500 text-sm ">Restaurant Transactions</h3>
   <div className="flex flex-col gap-2">
