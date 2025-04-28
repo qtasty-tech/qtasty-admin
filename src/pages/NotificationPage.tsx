@@ -96,7 +96,7 @@ const NotificationPage = () => {
       return;
     }
     try {
-      await axios.post(`http://localhost:8086/api/notifications/send`, null, {
+      await axios.post(`http://localhost:8085/api/notifications/send`, null, {
         params: { templateId: selectedTemplate }
       });
       toast.success('Notifications sent successfully');

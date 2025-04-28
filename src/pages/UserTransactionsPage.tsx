@@ -77,7 +77,7 @@ const UserTransactionsPage = () => {
     const totalAmount = userOrders.reduce((sum, order) => sum + order.totalAmount, 0);
 
     try {
-      await axios.post('http://localhost:8084/api/transactions', {
+      await axios.post('http://localhost:8086/api/transactions', {
         userId: selectedUser.id,
         userName: selectedUser.name,
         totalAmount: totalAmount,

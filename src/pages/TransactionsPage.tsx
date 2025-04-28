@@ -107,7 +107,7 @@ const TransactionsPage = () => {
 
   const fetchTransactions = async () => {
     try {
-      const response = await axios.get('http://localhost:8084/api/transactions');
+      const response = await axios.get('http://localhost:8086/api/transactions');
       setTransactions(response.data);
     } catch (error) {
       console.error('Error fetching transactions:', error);
