@@ -25,7 +25,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-green-200 to-green-300 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 transition-all duration-300 hover:shadow-2xl">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-2">Welcome Back</h1>
